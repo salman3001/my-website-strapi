@@ -31,6 +31,43 @@ export interface CollectionTypeResponse<TContentTypeUID extends Common.UID.Conte
     data: [AttributesWrapper<TContentTypeUID>]
     meta: any
 
-// TEST
-// declare function fetch<T extends Common.UID.ContentType>(uid: T): Promise<Response<T>>;
-// fetch('api::note.note').then(r => r.data.attributes.content)
+    // TEST
+    // declare function fetch<T extends Common.UID.ContentType>(uid: T): Promise<Response<T>>;
+    // fetch('api::note.note').then(r => r.data.attributes.content)
+
+}
+
+type FilterBuilder = {
+    $eq?: string,
+    $eqi?: string,
+    $ne?: string,
+    $nei?: string,
+    $lt?: string,
+    $lte?: string,
+    $gt?: string,
+    $gte?: string,
+    $in?: string[],
+    $notIn?: string[],
+    $contains?: string,
+    $notContains?: string,
+    $containsi?: string,
+    $or?: Record<any, FilterBuilder>[],
+    $and?: Record<any, FilterBuilder>[],
+    $not?: Array<Record<any, FilterBuilder>>,
+}
+
+type PopulateBuilder = '*' | string[] | Record<any, StrapiQueryBuilder>
+
+export interface StrapiQueryBuilder {
+    sort?: string[],
+    filters?: FilterBuilder | Record<any, FilterBuilder>
+    populate?: PopulateBuilder,
+    fields?: string[],
+    pagination?: {
+        pageSize: number,
+        page: number,
+        withCount: boolean
+    },
+    publicationState?: 'live' | 'preview',
+    locale?: string[],
+}
