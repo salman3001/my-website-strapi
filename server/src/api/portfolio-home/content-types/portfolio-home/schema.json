@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "portfolio_homes",
+  "info": {
+    "singularName": "portfolio-home",
+    "pluralName": "portfolio-homes",
+    "displayName": "Portfolio Home",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "skill_categories": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.skill-category"
+    }
+  }
+}

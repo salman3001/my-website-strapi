@@ -844,12 +844,12 @@ export interface ApiBlogCategoryBlogCategory extends Schema.CollectionType {
   };
 }
 
-export interface ApiPagePage extends Schema.CollectionType {
-  collectionName: 'pages';
+export interface ApiContactMessageContactMessage extends Schema.CollectionType {
+  collectionName: 'contact_messages';
   info: {
-    singularName: 'page';
-    pluralName: 'pages';
-    displayName: 'Page';
+    singularName: 'contact-message';
+    pluralName: 'contact-messages';
+    displayName: 'Contact Message';
   };
   options: {
     draftAndPublish: false;
@@ -858,14 +858,89 @@ export interface ApiPagePage extends Schema.CollectionType {
     name: Attribute.String &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
-        maxLength: 20;
+        minLength: 2;
+        maxLength: 30;
       }>;
-    content: Attribute.DynamicZone<['shared.seo']>;
+    email: Attribute.Email & Attribute.Required;
+    message: Attribute.Text & Attribute.Required;
+    phone: Attribute.BigInteger;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::contact-message.contact-message',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::contact-message.contact-message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiGlobalGlobal extends Schema.SingleType {
+  collectionName: 'globals';
+  info: {
+    singularName: 'global';
+    pluralName: 'globals';
+    displayName: 'Global';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    logo: Attribute.Media;
+    portfolio_email: Attribute.Email;
+    portfolio_github: Attribute.String;
+    portfolio_linkedin: Attribute.String;
+    portfolio_phone: Attribute.BigInteger;
+    copyrights: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::global.global',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::global.global',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPortfolioHomePortfolioHome extends Schema.SingleType {
+  collectionName: 'portfolio_homes';
+  info: {
+    singularName: 'portfolio-home';
+    pluralName: 'portfolio-homes';
+    displayName: 'Portfolio Home';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    skill_categories: Attribute.Component<'portfolio.skill-category', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::portfolio-home.portfolio-home',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::portfolio-home.portfolio-home',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -876,12 +951,14 @@ export interface ApiProfileProfile extends Schema.CollectionType {
     singularName: 'profile';
     pluralName: 'profiles';
     displayName: 'profile';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
     avatar: Attribute.Media;
+    newsletters: Attribute.Boolean & Attribute.DefaultTo<true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -892,6 +969,35 @@ export interface ApiProfileProfile extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::profile.profile',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSubscriberSubscriber extends Schema.CollectionType {
+  collectionName: 'subscribers';
+  info: {
+    singularName: 'subscriber';
+    pluralName: 'subscribers';
+    displayName: 'Subscriber';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::subscriber.subscriber',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::subscriber.subscriber',
       'oneToOne',
       'admin::user'
     > &
@@ -949,8 +1055,11 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
-      'api::page.page': ApiPagePage;
+      'api::contact-message.contact-message': ApiContactMessageContactMessage;
+      'api::global.global': ApiGlobalGlobal;
+      'api::portfolio-home.portfolio-home': ApiPortfolioHomePortfolioHome;
       'api::profile.profile': ApiProfileProfile;
+      'api::subscriber.subscriber': ApiSubscriberSubscriber;
       'api::tag.tag': ApiTagTag;
     }
   }

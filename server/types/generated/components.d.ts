@@ -1,5 +1,60 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
+export interface PortfolioProject extends Schema.Component {
+  collectionName: 'components_portfolio_projects';
+  info: {
+    displayName: 'Project';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    thumbnail: Attribute.Media;
+    desc: Attribute.Text;
+    long_desc: Attribute.RichText &
+      Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'toolbarBaloon';
+        }
+      >;
+  };
+}
+
+export interface PortfolioSkillCategory extends Schema.Component {
+  collectionName: 'components_portfolio_skill_categories';
+  info: {
+    displayName: 'Skill Category';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 2;
+        maxLength: 50;
+      }>;
+    skills: Attribute.Component<'portfolio.skill', true>;
+    projects: Attribute.Component<'portfolio.project', true>;
+  };
+}
+
+export interface PortfolioSkill extends Schema.Component {
+  collectionName: 'components_portfolio_skills';
+  info: {
+    displayName: 'skill';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    proficiency: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        min: 1;
+        max: 10;
+      }>;
+    image: Attribute.Media;
+  };
+}
+
 export interface SharedMetaSocial extends Schema.Component {
   collectionName: 'components_shared_meta_socials';
   info: {
@@ -54,6 +109,9 @@ export interface SharedSeo extends Schema.Component {
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
+      'portfolio.project': PortfolioProject;
+      'portfolio.skill-category': PortfolioSkillCategory;
+      'portfolio.skill': PortfolioSkill;
       'shared.meta-social': SharedMetaSocial;
       'shared.seo': SharedSeo;
     }

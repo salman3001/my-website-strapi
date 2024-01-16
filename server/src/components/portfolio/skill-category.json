@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_portfolio_skill_categories",
+  "info": {
+    "displayName": "Skill Category",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 50,
+      "minLength": 2
+    },
+    "skills": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.skill"
+    },
+    "projects": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.project"
+    }
+  }
+}

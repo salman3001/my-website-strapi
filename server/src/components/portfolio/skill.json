@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_portfolio_skills",
+  "info": {
+    "displayName": "skill"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "proficiency": {
+      "type": "integer",
+      "required": true,
+      "max": 10,
+      "min": 1
+    },
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}
