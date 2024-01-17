@@ -1,102 +1,106 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+    <q-layout view="lHh Lpr lFf">
+        <q-header>
+            <q-toolbar
+                class="bg-white text-black"
+                style="border: 1px solid rgba(0, 0, 0, 0.106)"
+            >
+                <q-btn
+                    flat
+                    dense
+                    round
+                    icon="menu"
+                    aria-label="Menu"
+                    @click="toggleLeftDrawer"
+                />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+                <q-toolbar-title>
+                    <BrandLogo />
+                </q-toolbar-title>
+                <div class="row q-gutter-sm">
+                    <div class="gt-sm">
+                        <SearchInput />
+                    </div>
+                    <NotificationMenu />
+                    <ProfileMenu />
+                </div>
+            </q-toolbar>
+            <q-toolbar
+                v-if="$q.screen.gt.xs"
+                class="bg-white text-black"
+                style="border: 1px solid rgba(0, 0, 0, 0.106)"
+            >
+                <div>
+                    <!-- <NavMenu title="Admin Users">
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <router-link
+                                    :to="{ name: 'admin.adminUsers.index' }"
+                                    class="text-black"
+                                    style="text-decoration: none"
+                                    >Admin Users</router-link
+                                >
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable v-close-popup>
+                            <q-item-section>
+                                <router-link
+                                    :to="{ name: 'admin.roles.index' }"
+                                    class="text-black"
+                                    style="text-decoration: none"
+                                    >Roles</router-link
+                                >
+                            </q-item-section>
+                        </q-item>
+                    </NavMenu>
+                    <router-link
+                        :to="{
+                            name: 'admin.user.index'
+                        }"
+                        class="text-black"
+                        style="
+                            text-decoration: none;
+                            text-transform: uppercase;
+                            font-weight: 500;
+                        "
+                    >
+                        <q-btn flat> Users </q-btn>
+                    </router-link> -->
+                </div>
+            </q-toolbar>
+        </q-header>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
+        <q-drawer
+            :behavior="'mobile'"
+            v-model="leftDrawerOpen"
+            show-if-above
+            bordered
         >
-          Essential Links
-        </q-item-label>
+            <AdminSideMenu />
+        </q-drawer>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+        <q-page-container>
+            <router-view />
+        </q-page-container>
+        <!-- <BaseModal /> -->
+    </q-layout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue'
+import SearchInput from 'components/forms/SearchInput.vue'
+import BrandLogo from 'components/BrandLogo.vue'
+import AdminSideMenu from 'components/AdminSideMenu.vue'
+import NotificationMenu from 'components/NotificationMenu.vue'
+import ProfileMenu from 'components/ProfileMenu.vue'
+import NavMenu from 'components/NavMenu.vue'
+// import BaseModal from 'components/modal/BaseModal.vue'
 
-const essentialLinks: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+import { useQuasar } from 'quasar'
 
 const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
+const $q = useQuasar()
+function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>

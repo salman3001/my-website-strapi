@@ -11,7 +11,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/IndexPage.vue'),
         meta: { authOnly: true }
       }
-    ]
+    ],
+    name: 'dashboard'
   },
   ...authRoutes,
 

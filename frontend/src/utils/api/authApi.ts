@@ -1,336 +1,466 @@
-import { StrapiQueryBuilder } from 'app/types/types';
-import { AxiosRequestConfig } from 'axios';
-import { Notify } from 'quasar';
-import { api } from 'src/boot/axios';
-import { ref } from 'vue';
+import { IUser } from 'app/types/types'
+import { AxiosRequestConfig } from 'axios'
+import { Notify } from 'quasar'
+import { api } from 'src/boot/axios'
+import { ref } from 'vue'
 
-export class BaseApi {
-    url: string;
-    name: string;
+interface LoginRes {
+    jwt: string
+    user: IUser
+}
 
-    public constructor(url: string, name: string) {
-        (this.url = url), (this.name = name);
-    }
+export class AuthApi {
+  public static useLocalLogin(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+    const response = ref<null | LoginRes>(null)
+    const login = async (data: {
+            identifier: string
+            password: string
+        }) => {
+      try {
+        loading.value = true
+        const res = await api.post('/api/auth/local', data, config)
+        response.value = res.data
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Login successfully',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        console.log(error)
 
-    public async find(
-        query?: StrapiQueryBuilder,
-        config?: AxiosRequestConfig<any> | undefined
-    ) {
-        const loading = ref(false);
-        const data = ref(null);
-        const errorMessage = ref<string | null>(null)
-        try {
-            loading.value = true;
-            const res = await api.get(this.url, {
-                params: {
-                    ...query,
-                },
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                ...config,
-            });
-            if (res?.data) {
-                data.value = res?.data;
-            }
-            loading.value = false;
-        } catch (error: any) {
-            loading.value = false;
-            if (error?.response) {
-                errorMessage.value = error?.response?.error?.message
-                Notify.create({
-                    message:
-                        error?.response?.error?.message || `Failed to fetch ${this.name}`,
-                    color: 'negative',
-                });
-            } else if (error?.request) {
-                errorMessage.value = `Trying to fetch ${this.name}.Server Not Reachable!`
-                Notify.create({
-                    message: `Trying to fetch ${this.name}.Server Not Reachable!`,
-                    color: 'negative',
-                });
-            } else {
-                errorMessage.value = error.message
-                Notify.create({ message: error.message, color: 'negative' });
-            }
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Login Failed',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value =
+                        'Trying to Login. Server Not Reachable!'
+          Notify.create({
+            message: 'Trying to Login. Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
         }
-
-        return { loading, data, errorMessage };
+      }
     }
 
-    public async findOne(
-        id: string,
-        query?: StrapiQueryBuilder,
-        config?: AxiosRequestConfig<any> | undefined
-    ) {
-        const loading = ref(false);
-        const data = ref(null);
-        const errorMessage = ref<string | null>(null)
-        try {
-            loading.value = true;
-            const res = await api.get(this.url + `/${id}`, {
-                params: {
-                    ...query,
-                },
-                ...config,
-            });
-            if (res?.data) {
-                data.value = res?.data;
-            }
-            loading.value = false;
-        } catch (error: any) {
-            loading.value = false;
-            if (error?.response) {
-                errorMessage.value = error?.response?.error?.message
-                Notify.create({
-                    message:
-                        error?.response?.error?.message || `Failed to fetch ${this.name}`,
-                    color: 'negative',
-                });
-            } else if (error?.request) {
-                errorMessage.value = `Trying to fetch ${this.name}.Server Not Reachable!`
-                Notify.create({
-                    message: `Trying to fetch ${this.name}.Server Not Reachable!`,
-                    color: 'negative',
-                });
-            } else {
-                errorMessage.value = error.message
-                Notify.create({ message: error.message, color: 'negative' });
-            }
+    return {
+      loading,
+      login,
+      errorMessage,
+      response
+    }
+  }
+
+  public static useRegister(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+    const response = ref<null | LoginRes>(null)
+
+    const register = async (data: {
+            username: string
+            email: string
+            password: string
+        }) => {
+      try {
+        loading.value = true
+        const res = await api.post(
+          '/api/auth/local/register',
+          data,
+          config
+        )
+        response.value = res.data
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Login successfully',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Registration Failed',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value =
+                        'Trying to Register. Server Not Reachable!'
+          Notify.create({
+            message: 'Trying to Login. Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
         }
-
-        return { loading, data, errorMessage };
+      }
     }
 
-    public create(
-        config?: AxiosRequestConfig<any> | undefined,
-        cb?: { onSuccess?: () => void; onError?: () => void }
-    ) {
-        const loading = ref(false);
-        const errorMessage = ref<string | null>(null)
-        const execute = async (data: any) => {
-            try {
-                loading.value = true;
-                const res = await api.post(this.url, data, config);
-                loading.value = false;
-                cb?.onSuccess && cb?.onSuccess();
-                Notify.create({
-                    message: `${this.name} created successfully`,
-                    color: 'positive',
-                    icon: 'done',
-                });
-            } catch (error: any) {
-                if (error?.response) {
-                    loading.value = false;
-                    cb?.onError && cb?.onError();
-                    errorMessage.value = error?.response?.error?.message
-                    Notify.create({
-                        message:
-                            error?.response?.error?.message || `Failed to create ${this.name}`,
-                        color: 'negative',
-                    });
-                } else if (error?.request) {
-                    loading.value = false;
-                    cb?.onError && cb?.onError();
-                    errorMessage.value = `Trying to create ${this.name}.Server Not Reachable!`
-                    Notify.create({
-                        message: `Trying to create ${this.name}.Server Not Reachable!`,
-                        color: 'negative',
-                    });
-                } else {
-                    loading.value = false;
-                    cb?.onError && cb?.onError();
-                    errorMessage.value = error.message
-                    Notify.create({ message: error.message, color: 'negative' });
-                }
-            }
-        };
+    return {
+      loading,
+      register,
+      errorMessage,
+      response
+    }
+  }
 
-        return {
-            loading,
-            execute,
-            errorMessage
-        };
+  public static useForgotPassword(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+
+    const execute = async (data: { email: string }) => {
+      try {
+        loading.value = true
+        const res = await api.post(
+          '/api/auth/forgot-password',
+          data,
+          config
+        )
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Password reset email sent! Check your mail inbox',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Passwrod Reset Failed',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = 'Server Not Reachable!'
+          Notify.create({
+            message: 'Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
+        }
+      }
     }
 
-    public update(
-        config?: AxiosRequestConfig<any> | undefined,
-        cb?: { onSuccess?: () => void; onError?: () => void }
-    ) {
-        const loading = ref(false);
-        const errorMessage = ref<string | null>(null)
-        const execute = async (id: string, data: any) => {
-            try {
-                loading.value = true;
-                const res = await api.put(this.url + `/${id}`, data, config);
-                loading.value = false;
-                cb?.onSuccess && cb?.onSuccess();
-                Notify.create({
-                    message: `${this.name} updated successfully`,
-                    color: 'positive',
-                    icon: 'done',
-                });
-            } catch (error: any) {
-                if (error?.response) {
-                    loading.value = false;
-                    cb?.onError && cb?.onError();
-                    errorMessage.value = error?.response?.error?.message
-                    Notify.create({
-                        message:
-                            error?.response?.error?.message || `Failed to updtae ${this.name}`,
-                        color: 'negative',
-                    });
-                } else if (error?.request) {
-                    cb?.onError && cb?.onError();
-                    loading.value = false;
-                    errorMessage.value = `Trying to update ${this.name}.Server Not Reachable!`
-                    Notify.create({
-                        message: `Trying to update ${this.name}.Server Not Reachable!`,
-                        color: 'negative',
-                    });
-                } else {
-                    cb?.onError && cb?.onError();
-                    loading.value = false;
-                    errorMessage.value = error.message
-                    Notify.create({ message: error.message, color: 'negative' });
-                }
-            }
-        };
+    return {
+      loading,
+      execute,
+      errorMessage
+    }
+  }
 
-        return {
-            loading,
-            execute,
-            errorMessage
-        };
+  public static useResetPassword(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+
+    const execute = async (data: {
+            password: string
+            passwordConfirmation: string
+            code: string
+        }) => {
+      try {
+        loading.value = true
+        const res = await api.post(
+          '/api/auth/reset-password',
+          data,
+          config
+        )
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Password reset successfull',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Passwrod Reset Failed',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = 'Server Not Reachable!'
+          Notify.create({
+            message: 'Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
+        }
+      }
     }
 
-    public delete(
-        config?: AxiosRequestConfig<any> | undefined,
-        cb?: { onSuccess?: () => void; onError?: () => void }
-    ) {
-        const loading = ref(false);
-        const execute = async (id: string) => {
-            try {
-                loading.value = true;
-                const res = await api.delete(this.url + `/${id}`, config);
-                loading.value = false;
-                cb?.onSuccess && cb?.onSuccess();
-                Notify.create({
-                    message: `${this.name} deleted successfully`,
-                    color: 'positive',
-                    icon: 'done',
-                });
-            } catch (error: any) {
-                if (error?.response) {
-                    cb?.onError && cb?.onError();
-                    loading.value = false;
-                    Notify.create({
-                        message:
-                            error?.response?.error?.message || `Failed to delete ${this.name}`,
-                        color: 'negative',
-                    });
-                } else if (error?.request) {
-                    cb?.onError && cb?.onError();
-                    loading.value = false;
-                    Notify.create({
-                        message: `Trying to delte ${this.name}.Server Not Reachable!`,
-                        color: 'negative',
-                    });
-                } else {
-                    cb?.onError && cb?.onError();
-                    loading.value = false;
-                    Notify.create({ message: error.message, color: 'negative' });
-                }
-            }
-        };
+    return {
+      loading,
+      execute,
+      errorMessage
+    }
+  }
 
-        return {
-            loading,
-            execute,
-        };
+  public static useChangePassword(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+
+    const execute = async (data: {
+            password: string
+            currentPassword: string
+            passwordConfirmation: string
+        }) => {
+      try {
+        loading.value = true
+        const res = await api.post(
+          '/api/auth/change-password',
+          data,
+          config
+        )
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Password changed successfull',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Passwrod change Failed',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = 'Server Not Reachable!'
+          Notify.create({
+            message: 'Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
+        }
+      }
     }
 
-    //   public async exportExcel(
-    //     query?: AdditionalParams,
-    //     config?: AxiosRequestConfig<any> | undefined
-    //   ) {
-    //     const loading = ref(false);
-    //     const data = ref(null);
-    //     try {
-    //       loading.value = true;
-    //       const res = await api.get(this.url + '/export', {
-    //         params: {
-    //           ...query,
-    //         },
-    //         headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    //         ...config,
-    //       });
-    //       if (res?.data) {
-    //         data.value = res?.data;
-    //       }
-    //       loading.value = false;
-    //     } catch (error: any) {
-    //       loading.value = false;
-    //       if (error?.response) {
-    //         Notify.create({
-    //           message:
-    //             error?.response?.data?.message || `Failed to export ${this.name}`,
-    //           color: 'negative',
-    //         });
-    //       } else if (error?.request) {
-    //         Notify.create({
-    //           message: `Trying to fetch ${this.name}.Server Not Reachable!`,
-    //           color: 'negative',
-    //         });
-    //       } else {
-    //         Notify.create({ message: error.message, color: 'negative' });
-    //       }
-    //     }
+    return {
+      loading,
+      execute,
+      errorMessage
+    }
+  }
 
-    //     return { loading, data };
-    //   }
+  public static async useEmailConfirmation(
+    query: {
+            confirmation: string
+        },
+    config?: AxiosRequestConfig<any> | undefined
+  ) {
+    const loading = ref(false)
+    const data = ref(null)
+    const errorMessage = ref<string | null>(null)
+    try {
+      loading.value = true
+      const res = await api.get('/api/auth/email-confrimation', {
+        data: {
+          ...query
+        },
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        ...config
+      })
+      if (res?.data) {
+        data.value = res?.data
+      }
+      loading.value = false
+    } catch (error: any) {
+      loading.value = false
+      if (error?.response) {
+        errorMessage.value = error?.response?.data?.error?.message
+        Notify.create({
+          message:
+                        error?.response?.data?.error?.message ||
+                        `Failed to confirm ${this.name}`,
+          color: 'negative'
+        })
+      } else if (error?.request) {
+        errorMessage.value = 'Server Not Reachable!'
+        Notify.create({
+          message: 'Server Not Reachable!',
+          color: 'negative'
+        })
+      } else {
+        errorMessage.value = error.message
+        Notify.create({ message: error.message, color: 'negative' })
+      }
+    }
 
-    //   public importExcel(
-    //     config?: AxiosRequestConfig<any> | undefined,
-    //     cb?: { onSuccess?: () => void; onError?: () => void }
-    //   ) {
-    //     const loading = ref(false);
-    //     const execute = async (data: any) => {
-    //       try {
-    //         loading.value = true;
-    //         const res = await api.post(this.url + '/import', data, config);
-    //         loading.value = false;
-    //         cb?.onSuccess && cb?.onSuccess();
-    //         Notify.create({
-    //           message: 'Data Uploaded, Refresh the page',
-    //           color: 'positive',
-    //           icon: 'done',
-    //         });
-    //       } catch (error: any) {
-    //         if (error?.response) {
-    //           loading.value = false;
-    //           cb?.onError && cb?.onError();
-    //           Notify.create({
-    //             message:
-    //               JSON.stringify(error?.response?.data) || 'Failed to Import Excel',
-    //             color: 'negative',
-    //           });
-    //         } else if (error?.request) {
-    //           loading.value = false;
-    //           cb?.onError && cb?.onError();
-    //           Notify.create({
-    //             message: 'Trying to import excel .Server Not Reachable!',
-    //             color: 'negative',
-    //           });
-    //         } else {
-    //           loading.value = false;
-    //           cb?.onError && cb?.onError();
-    //           Notify.create({ message: error.message, color: 'negative' });
-    //         }
-    //       }
-    //     };
+    return { loading, data, errorMessage }
+  }
 
-    //     return {
-    //       loading,
-    //       execute,
-    //     };
-    //   }
+  public static useSendEmailConfrimation(
+    config?: AxiosRequestConfig<any> | undefined,
+    cb?: { onSuccess?: () => void; onError?: () => void }
+  ) {
+    const loading = ref(false)
+    const errorMessage = ref<string | null>(null)
+
+    const execute = async (data: { email: string }) => {
+      try {
+        loading.value = true
+        const res = await api.post(
+          '/api/auth/send-email-confrimation',
+          data,
+          config
+        )
+        loading.value = false
+        cb?.onSuccess && cb?.onSuccess()
+        Notify.create({
+          message: 'Email Confirmation Sent',
+          color: 'positive',
+          icon: 'done'
+        })
+      } catch (error: any) {
+        if (error?.response) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error?.response?.data?.error?.message
+          Notify.create({
+            message:
+                            error?.response?.data?.error?.message ||
+                            'Failed to send email confirmation',
+            color: 'negative'
+          })
+        } else if (error?.request) {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = 'Server Not Reachable!'
+          Notify.create({
+            message: 'Server Not Reachable!',
+            color: 'negative'
+          })
+        } else {
+          loading.value = false
+          cb?.onError && cb?.onError()
+          errorMessage.value = error.message
+          Notify.create({ message: error.message, color: 'negative' })
+        }
+      }
+    }
+
+    return {
+      loading,
+      execute,
+      errorMessage
+    }
+  }
+
+  public static async varifyMyAuth(
+    config?: AxiosRequestConfig<any> | undefined
+  ) {
+    const loading = ref(false)
+    const data = ref<null | Record<any, any>>(null)
+    const errorMessage = ref<string | null>(null)
+    try {
+      loading.value = true
+      const res = await api.get('/api/users/me', {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        ...config
+      })
+      if (res?.data) {
+        data.value = res?.data
+      }
+      loading.value = false
+    } catch (error: any) {
+      loading.value = false
+      if (error?.response) {
+        errorMessage.value = error?.response?.data?.error?.message
+        Notify.create({
+          message:
+                        error?.response?.data?.error?.message ||
+                        'Users not logged in or Session expired',
+          color: 'negative'
+        })
+      } else if (error?.request) {
+        errorMessage.value = 'Server Not Reachable!'
+        Notify.create({
+          message: 'Server Not Reachable!',
+          color: 'negative'
+        })
+      } else {
+        errorMessage.value = error.message
+        Notify.create({ message: error.message, color: 'negative' })
+      }
+    }
+
+    return { loading, data, errorMessage }
+  }
 }
