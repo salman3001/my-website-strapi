@@ -1,10 +1,4 @@
 // app global css in SCSS form
-
-@font-face {
-    font-family: customfont;
-    src: url(./fonts/customfont.woff);
-  }
-
-  *{
-    font-family: customfont;
-  }
+html{
+    scroll-behavior: smooth;
+}

@@ -31,7 +31,7 @@ module.exports = configure(function (ctx) {
     boot: ['i18n', 'axios'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ['app.scss'],
+    css: ['app.scss', 'tailwind.css'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -120,7 +120,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Cookies', 'Notify', 'Dark']
+      plugins: ['Cookies', 'Notify', 'Dark', 'LocalStorage']
     },
 
     // animations: 'all', // --- includes all animations
