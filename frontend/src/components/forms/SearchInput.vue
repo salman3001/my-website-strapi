@@ -7,6 +7,8 @@ const text = ref('')
     <q-input
         type="text"
         outlined
+        bg-color="white"
+        :dark="false"
         v-model="text"
         placeholder="Search"
         dense

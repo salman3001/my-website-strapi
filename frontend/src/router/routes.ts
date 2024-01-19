@@ -3,16 +3,20 @@ import { authRoutes } from './authRoute'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '',
+        path: '/',
         component: () => import('pages/IndexPage.vue'),
-        meta: { authOnly: true }
+        name: 'home'
+      },
+      {
+        path: '/portfolio',
+        component: () => import('pages/PortfolioPage.vue'),
+        name: 'portfolio'
       }
-    ],
-    name: 'dashboard'
+    ]
   },
   ...authRoutes,
 

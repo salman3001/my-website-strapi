@@ -64,6 +64,7 @@ module.exports = {
 
   // add your custom rules here
   rules: {
+    camelcase: 'off',
     'space-before-function-paren': 'off',
 
     // allow async-await

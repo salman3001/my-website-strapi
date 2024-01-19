@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
-import { AuthApi } from 'src/utils/api/AuthApi'
+import { AuthApi } from 'src/utils/api/authApi'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 

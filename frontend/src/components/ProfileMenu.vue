@@ -18,7 +18,7 @@ const logout = async () => {
 // })
 </script>
 <template>
-    <q-btn round class="text-black" unelevated>
+    <q-btn round unelevated>
         <q-avatar size="36px">
             <!-- <img
                 :src="
@@ -27,6 +27,7 @@ const logout = async () => {
                         : '/images/sample-dp.png'
                 "
             /> -->
+            <q-icon name="account_circle"></q-icon>
         </q-avatar>
 
         <q-menu anchor="bottom left">

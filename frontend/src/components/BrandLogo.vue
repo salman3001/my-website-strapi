@@ -3,13 +3,12 @@
 </script>
 <template>
     <span>
-        <!-- <RouterLink
+        <RouterLink
             class="text-h6 text-weight-bold text-black"
             style="text-decoration: none"
-            :to="{ name: 'adminDashboard' }"
+            :to="{ name: 'home' }"
         >
             Logo
-        </RouterLink> -->
-        Logo
+        </RouterLink>
     </span>
 </template>

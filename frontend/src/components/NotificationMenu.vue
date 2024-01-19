@@ -17,7 +17,7 @@ const router = useRouter()
 // })
 </script>
 <template>
-    <q-btn round icon="mail" class="text-black" unelevated>
+    <q-btn round icon="mail" unelevated>
         <q-badge floating rounded color="red">{{
             // notify.notificationCount
             5

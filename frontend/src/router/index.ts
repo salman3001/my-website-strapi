@@ -72,7 +72,7 @@ export default route(function (
       console.log(user)
 
       if (user) {
-        return { name: 'dashboard' }
+        return { name: 'home' }
       } else {
         return true
       }
