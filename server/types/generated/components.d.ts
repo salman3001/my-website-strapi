@@ -1,22 +1,38 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
-export interface PortfolioProject extends Schema.Component {
-  collectionName: 'components_portfolio_projects';
+export interface PortfolioCards extends Schema.Component {
+  collectionName: 'components_portfolio_cards';
   info: {
-    displayName: 'Project';
+    displayName: 'Cards';
     description: '';
   };
   attributes: {
-    name: Attribute.String & Attribute.Required;
-    thumbnail: Attribute.Media;
+    icon_name: Attribute.String & Attribute.Required;
+    title: Attribute.String & Attribute.Required;
     desc: Attribute.Text;
-    long_desc: Attribute.RichText &
-      Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'toolbarBaloon';
-        }
-      >;
+  };
+}
+
+export interface PortfolioEducation extends Schema.Component {
+  collectionName: 'components_portfolio_educations';
+  info: {
+    displayName: 'education';
+  };
+  attributes: {
+    title: Attribute.String;
+    address: Attribute.String;
+  };
+}
+
+export interface PortfolioExperience extends Schema.Component {
+  collectionName: 'components_portfolio_experiences';
+  info: {
+    displayName: 'experience';
+  };
+  attributes: {
+    date: Attribute.Date & Attribute.Required;
+    title: Attribute.String & Attribute.Required;
+    description: Attribute.Text;
   };
 }
 
@@ -34,7 +50,6 @@ export interface PortfolioSkillCategory extends Schema.Component {
         maxLength: 50;
       }>;
     skills: Attribute.Component<'portfolio.skill', true>;
-    projects: Attribute.Component<'portfolio.project', true>;
   };
 }
 
@@ -42,14 +57,15 @@ export interface PortfolioSkill extends Schema.Component {
   collectionName: 'components_portfolio_skills';
   info: {
     displayName: 'skill';
+    description: '';
   };
   attributes: {
     name: Attribute.String & Attribute.Required;
-    proficiency: Attribute.Integer &
+    progress: Attribute.Integer &
       Attribute.Required &
       Attribute.SetMinMax<{
         min: 1;
-        max: 10;
+        max: 100;
       }>;
     image: Attribute.Media;
   };
@@ -109,7 +125,9 @@ export interface SharedSeo extends Schema.Component {
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
-      'portfolio.project': PortfolioProject;
+      'portfolio.cards': PortfolioCards;
+      'portfolio.education': PortfolioEducation;
+      'portfolio.experience': PortfolioExperience;
       'portfolio.skill-category': PortfolioSkillCategory;
       'portfolio.skill': PortfolioSkill;
       'shared.meta-social': SharedMetaSocial;

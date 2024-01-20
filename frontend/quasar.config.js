@@ -69,9 +69,9 @@ module.exports = configure(function (ctx) {
 
       // publicPath: '/',
       // analyze: true,
-      env: {
-        API: ctx.dev ? 'http://localhost:1337/' : 'something/'
-      },
+      // env: {
+      //   API: ctx.dev ? 'http://localhost:1337' : 'something/'
+      // },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -102,7 +102,17 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:1337/',
+          changeOrigin: true
+        },
+        '/uploads': {
+          target: 'http://localhost:1337/',
+          changeOrigin: true
+        }
+      }
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

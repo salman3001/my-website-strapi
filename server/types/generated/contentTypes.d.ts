@@ -881,36 +881,26 @@ export interface ApiContactMessageContactMessage extends Schema.CollectionType {
   };
 }
 
-export interface ApiGlobalGlobal extends Schema.SingleType {
-  collectionName: 'globals';
+export interface ApiLinkLink extends Schema.CollectionType {
+  collectionName: 'links';
   info: {
-    singularName: 'global';
-    pluralName: 'globals';
-    displayName: 'Global';
+    singularName: 'link';
+    pluralName: 'links';
+    displayName: 'Link';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    logo: Attribute.Media;
-    portfolio_email: Attribute.Email;
-    portfolio_github: Attribute.String;
-    portfolio_linkedin: Attribute.String;
-    portfolio_phone: Attribute.BigInteger;
-    copyrights: Attribute.String;
+    display_name: Attribute.String & Attribute.Required;
+    route: Attribute.String & Attribute.Required;
+    name: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::global.global',
-      'oneToOne',
-      'admin::user'
-    > &
+    createdBy: Attribute.Relation<'api::link.link', 'oneToOne', 'admin::user'> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::global.global',
-      'oneToOne',
-      'admin::user'
-    > &
+    updatedBy: Attribute.Relation<'api::link.link', 'oneToOne', 'admin::user'> &
       Attribute.Private;
   };
 }
@@ -928,6 +918,24 @@ export interface ApiPortfolioHomePortfolioHome extends Schema.SingleType {
   };
   attributes: {
     skill_categories: Attribute.Component<'portfolio.skill-category', true>;
+    avatar: Attribute.Media;
+    social_links: Attribute.Relation<
+      'api::portfolio-home.portfolio-home',
+      'oneToMany',
+      'api::link.link'
+    >;
+    about_me_desc: Attribute.Text;
+    portfolio_projects: Attribute.Relation<
+      'api::portfolio-home.portfolio-home',
+      'oneToMany',
+      'api::portfolio-project.portfolio-project'
+    >;
+    experiences: Attribute.Component<'portfolio.experience', true>;
+    educations: Attribute.Component<'portfolio.education', true>;
+    projects_subtitle: Attribute.Text;
+    skills_subtitle: Attribute.Text;
+    contact_me_subtitle: Attribute.Text;
+    cards: Attribute.Component<'portfolio.cards', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -938,6 +946,48 @@ export interface ApiPortfolioHomePortfolioHome extends Schema.SingleType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::portfolio-home.portfolio-home',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPortfolioProjectPortfolioProject
+  extends Schema.CollectionType {
+  collectionName: 'portfolio_projects';
+  info: {
+    singularName: 'portfolio-project';
+    pluralName: 'portfolio-projects';
+    displayName: 'Portfolio Project';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    slug: Attribute.UID<'api::portfolio-project.portfolio-project', 'name'> &
+      Attribute.Required;
+    description: Attribute.Text;
+    thumbnail: Attribute.Media;
+    content: Attribute.RichText &
+      Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'toolbarBaloon';
+        }
+      >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::portfolio-project.portfolio-project',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::portfolio-project.portfolio-project',
       'oneToOne',
       'admin::user'
     > &
@@ -1056,8 +1106,9 @@ declare module '@strapi/types' {
       'api::blog.blog': ApiBlogBlog;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::contact-message.contact-message': ApiContactMessageContactMessage;
-      'api::global.global': ApiGlobalGlobal;
+      'api::link.link': ApiLinkLink;
       'api::portfolio-home.portfolio-home': ApiPortfolioHomePortfolioHome;
+      'api::portfolio-project.portfolio-project': ApiPortfolioProjectPortfolioProject;
       'api::profile.profile': ApiProfileProfile;
       'api::subscriber.subscriber': ApiSubscriberSubscriber;
       'api::tag.tag': ApiTagTag;

@@ -13,8 +13,20 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/portfolio',
-        component: () => import('pages/PortfolioPage.vue'),
+        component: () => import('pages/portfolio/PortfolioPage.vue'),
         name: 'portfolio'
+      },
+      {
+        path: '/portfolio/projects',
+        component: () =>
+          import('pages/portfolio/projects/ProjectsIndex.vue'),
+        name: 'portfolio.projects.index'
+      },
+      {
+        path: '/portfolio/projects/:slug/',
+        component: () =>
+          import('pages/portfolio/projects/ProjectShow.vue'),
+        name: 'portfolio.projects.show'
       }
     ]
   },

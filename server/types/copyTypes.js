@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const sourcePath = path.join(__dirname, './generated/contentTypes.d.ts');
-const destinationPath = path.join(__dirname, '../../frontend/types/contentTypes.d.ts');
+const destinationPath = path.join(__dirname, '../../frontend/types/contentTypes.ts');
 const destinationDir = path.dirname(destinationPath);
 
 // Check if source file exists

@@ -16,6 +16,51 @@
       "type": "component",
       "repeatable": true,
       "component": "portfolio.skill-category"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "social_links": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::link.link"
+    },
+    "about_me_desc": {
+      "type": "text"
+    },
+    "portfolio_projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::portfolio-project.portfolio-project"
+    },
+    "experiences": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.experience"
+    },
+    "educations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.education"
+    },
+    "projects_subtitle": {
+      "type": "text"
+    },
+    "skills_subtitle": {
+      "type": "text"
+    },
+    "contact_me_subtitle": {
+      "type": "text"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portfolio.cards"
     }
   }
 }
