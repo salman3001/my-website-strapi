@@ -19,27 +19,11 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
-import { onMounted, ref } from 'vue'
-
-const dark = ref(false)
+import { ref } from 'vue'
 
 const $q = useQuasar()
 
-onMounted(() => {
-  const darkmode = $q.localStorage.getItem('darkmode')
-  if (!darkmode) {
-    $q.localStorage.set('darkmode', 'true')
-    $q.dark.set(true)
-    dark.value = true
-    return
-  }
+const darkmode = $q.localStorage.getItem('darkmode')
 
-  if (darkmode === 'true') {
-    $q.dark.set(true)
-    dark.value = true
-  } else {
-    $q.dark.set(false)
-    dark.value = false
-  }
-})
+const dark = ref(darkmode === 'true')
 </script>

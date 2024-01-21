@@ -1,3 +1,33 @@
+<script setup lang="ts">
+import { useQuasar } from 'quasar'
+import { AuthApi } from 'src/utils/api/authApi'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const $q = useQuasar()
+
+const isPwd = ref(true)
+
+const form = ref({
+  identifier: '',
+  password: ''
+})
+
+const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
+  {},
+  {
+    onSuccess() {
+      $q.cookies.set('user', response.value?.user as unknown as string)
+      $q.cookies.set('token', response.value?.jwt as unknown as string)
+      router.push({
+        name: 'dashboard'
+      })
+    }
+  }
+)
+</script>
 <template>
     <q-layout>
         <q-page-container>
@@ -68,28 +98,24 @@
                                             />
                                         </template>
                                     </q-input>
+                                    <div
+                                        class="full-width tw-pt-2 text-secondary flex items-end tw-flex-col"
+                                    >
+                                        <router-link
+                                            :to="{ name: 'forgot-password' }"
+                                            >Forgot Password</router-link
+                                        >
+                                        <router-link :to="{ name: 'register' }"
+                                            >Register</router-link
+                                        >
+                                    </div>
                                 </div>
                                 <q-btn
-                                    color="primary"
-                                    v-if="loading"
-                                    :disable="true"
-                                    style="width: 100%"
-                                >
-                                    <q-circular-progress
-                                        indeterminate
-                                        size="20px"
-                                        class="q-px-10"
-                                        :thickness="1"
-                                        color="grey-8"
-                                        track-color="orange-2"
-                                        style="min-width: 8rem"
-                                    />
-                                </q-btn>
-                                <q-btn
-                                    v-else
                                     type="submit"
                                     color="primary"
                                     style="width: 100%"
+                                    :disable="loading"
+                                    :loading="loading"
                                     >Submit</q-btn
                                 >
                             </form>
@@ -100,34 +126,3 @@
         </q-page-container>
     </q-layout>
 </template>
-
-<script setup lang="ts">
-import { useQuasar } from 'quasar'
-import { AuthApi } from 'src/utils/api/authApi'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const $q = useQuasar()
-
-const isPwd = ref(true)
-
-const form = ref({
-  identifier: '',
-  password: ''
-})
-
-const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
-  {},
-  {
-    onSuccess() {
-      $q.cookies.set('user', response.value?.user as unknown as string)
-      $q.cookies.set('token', response.value?.jwt as unknown as string)
-      router.push({
-        name: 'dashboard'
-      })
-    }
-  }
-)
-</script>

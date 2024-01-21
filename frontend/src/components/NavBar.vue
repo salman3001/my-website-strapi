@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import SearchInput from 'components/forms/SearchInput.vue'
+import BrandLogo from 'components/BrandLogo.vue'
+import NotificationMenu from 'components/NotificationMenu.vue'
+import ProfileMenu from 'components/ProfileMenu.vue'
+import ThemeTogel from 'src/components/ThemeTogel.vue'
+import { useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
+
+const leftDrawerOpen = ref(false)
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+const route = useRoute()
+const currentRouteName = computed(() => route.name)
+
+const $q = useQuasar()
+
+const user = $q.cookies.get('user')
+</script>
+
 <template>
     <q-header reveal>
         <q-toolbar class="q-py-sm">
@@ -115,8 +137,13 @@
                 </div>
                 <div class="gt-sm">
                     <ThemeTogel />
-                    <NotificationMenu />
-                    <ProfileMenu />
+                    <span v-if="user">
+                        <NotificationMenu />
+                        <ProfileMenu />
+                    </span>
+                    <router-link v-else :to="{ name: 'login' }">
+                        <q-btn>Login</q-btn>
+                    </router-link>
                 </div>
             </div>
         </q-toolbar>
@@ -126,19 +153,3 @@
         <AdminSideMenu />
     </q-drawer>
 </template>
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import SearchInput from 'components/forms/SearchInput.vue'
-import BrandLogo from 'components/BrandLogo.vue'
-import NotificationMenu from 'components/NotificationMenu.vue'
-import ProfileMenu from 'components/ProfileMenu.vue'
-import ThemeTogel from 'src/components/ThemeTogel.vue'
-import { useRoute } from 'vue-router'
-
-const leftDrawerOpen = ref(false)
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-const route = useRoute()
-const currentRouteName = computed(() => route.name)
-</script>

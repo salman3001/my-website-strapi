@@ -5,8 +5,6 @@ export default ({ env }) => ({
             providerOptions: {
                 host: env('SMTP_HOST', 'smtp.example.com'),
                 port: env('SMTP_PORT', 587),
-                secure: false,
-                requireTLS: false,
                 auth: {
                     user: env('SMTP_USERNAME'),
                     pass: env('SMTP_PASSWORD'),

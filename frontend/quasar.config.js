@@ -103,6 +103,7 @@ module.exports = configure(function (ctx) {
     devServer: {
       // https: true
       open: true, // opens browser window automatically,
+      host: '0.0.0.0',
       proxy: {
         '/api': {
           target: 'http://localhost:1337/',
