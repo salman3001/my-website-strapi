@@ -9,7 +9,17 @@ const form = reactive({
   message: ''
 })
 
-const { loading, errorMessage, execute } = ContactMessageApi.create()
+const { loading, errorMessage, execute } = ContactMessageApi.create(
+  {},
+  {
+    onSuccess: () => {
+      form.email = ''
+      form.message = ''
+      form.name = ''
+      form.phone = ''
+    }
+  }
+)
 </script>
 
 <template>
@@ -23,7 +33,9 @@ const { loading, errorMessage, execute } = ContactMessageApi.create()
             >
         </div>
         <br />
-        <div class="tw-text-red-500 tw-py-4" v-if="errorMessage">error</div>
+        <div class="tw-text-red-500 tw-py-4" v-if="errorMessage">
+            {{ errorMessage }}
+        </div>
         <q-form
             class="column q-gutter-y-md text-center tw-mb-10 tw-max-w-xl"
             @submit.prevent="
@@ -35,38 +47,44 @@ const { loading, errorMessage, execute } = ContactMessageApi.create()
             <q-input
                 label="Name"
                 v-model="form.name"
-                required
                 outlined
                 :dark="false"
                 bg-color="white"
+                :rules="[$rules.required('Field in required')]"
             />
 
             <q-input
                 label="Email"
                 type="email"
                 v-model="form.email"
-                required
                 outlined
                 :dark="false"
                 bg-color="white"
+                :rules="[
+                    $rules.required('Field in required'),
+                    $rules.email('Not a valid email')
+                ]"
             />
             <q-input
                 label="Phone"
                 type="number"
                 v-model="form.phone"
-                required
                 outlined
                 :dark="false"
                 bg-color="white"
+                :rules="[
+                    $rules.required('Field in required'),
+                    $rules.minLength(8, 'Not a valid number')
+                ]"
             />
             <q-input
                 label="Message"
                 type="textarea"
                 v-model="form.message"
-                required
                 outlined
                 :dark="false"
                 bg-color="white"
+                :rules="[$rules.required('Field in required')]"
             />
 
             <q-btn

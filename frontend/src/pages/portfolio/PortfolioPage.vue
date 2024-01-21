@@ -31,7 +31,8 @@ PortfolioPageApi.find({
     social_links: { fields: ['*'] },
     cards: { fields: ['*'] },
     experiences: { fields: ['*'] },
-    educations: { fields: ['*'] }
+    educations: { fields: ['*'] },
+    avatar: { fields: ['*'] }
   }
 }).then(({ data }) => {
   pageData.value = data.value
@@ -52,7 +53,10 @@ watch(pageData, () => {
                     class="tw-flex tw-justify-center tw-items-center tw-flex-col tw-pt-10 tw-gap-4 tw-px-3"
                 >
                     <img
-                        src="images/sample dp.webp"
+                        :src="
+                            pageData?.data?.attributes?.avatar?.data?.attributes
+                                ?.formats?.thumbnail?.url
+                        "
                         alt=""
                         class="tw-rounded-full tw-max-w-36"
                     />
