@@ -38,11 +38,12 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
-                            'Login Failed',
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message || 'Login Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -85,7 +86,9 @@ export class AuthApi {
             password: string
         }) => {
       try {
+        console.log('no-log')
         loading.value = true
+
         const res = await api.post(
           '/api/auth/local/register',
           data,
@@ -102,15 +105,20 @@ export class AuthApi {
       } catch (error: any) {
         if (error?.response) {
           loading.value = false
+          console.log('err1')
+
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
-                            'Registration Failed',
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message || 'Registration Failed',
             color: 'negative'
           })
         } else if (error?.request) {
+          console.log('err2')
+
           loading.value = false
           cb?.onError && cb?.onError()
           errorMessage.value =
@@ -120,6 +128,8 @@ export class AuthApi {
             color: 'negative'
           })
         } else {
+          console.log('err3')
+
           loading.value = false
           cb?.onError && cb?.onError()
           errorMessage.value = error.message
@@ -162,11 +172,12 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
-                            'Passwrod Reset Failed',
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message || 'Passwrod Reset Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -223,11 +234,12 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
-                            'Passwrod Reset Failed',
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message || 'Passwrod Reset Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -284,11 +296,12 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
-                            'Passwrod change Failed',
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message || 'Passwrod change Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -342,11 +355,12 @@ export class AuthApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value = error?.response?.data?.error?.message
+        errorMessage.value =
+                    error?.response?.data?.error?.details?.errors[0]?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.message ||
-                        `Failed to confirm ${this.name}`,
+                        error?.response?.data?.error?.details?.errors[0]
+                          ?.message || `Failed to confirm ${this.name}`,
           color: 'negative'
         })
       } else if (error?.request) {
@@ -390,10 +404,12 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value = error?.response?.data?.error?.message
+          errorMessage.value =
+                        error?.response?.data?.error?.details?.errors[0]?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.message ||
+                            error?.response?.data?.error?.details?.errors[0]
+                              ?.message ||
                             'Failed to send email confirmation',
             color: 'negative'
           })
@@ -442,10 +458,12 @@ export class AuthApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value = error?.response?.data?.error?.message
+        errorMessage.value =
+                    error?.response?.data?.error?.details?.errors[0]?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.message ||
+                        error?.response?.data?.error?.details?.errors[0]
+                          ?.message ||
                         'Users not logged in or Session expired',
           color: 'negative'
         })
