@@ -105,11 +105,11 @@ module.exports = configure(function (ctx) {
       open: true, // opens browser window automatically,
       proxy: {
         '/api': {
-          target: 'http://localhost:1337/',
+          target: 'http://127.0.0.1:1337/',
           changeOrigin: true
         },
         '/uploads': {
-          target: 'http://localhost:1337/',
+          target: 'http://127.0.0.1:1337/',
           changeOrigin: true
         }
       }
@@ -118,6 +118,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {},
+      cssAddon: true,
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack

@@ -38,12 +38,11 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || 'Login Failed',
+                            error?.response?.data?.error?.message ||
+                            'Login Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -98,27 +97,24 @@ export class AuthApi {
         loading.value = false
         cb?.onSuccess && cb?.onSuccess()
         Notify.create({
-          message: 'Login successfully',
+          message:
+                        'Registration Successfull. Please check your email and verify your account',
           color: 'positive',
-          icon: 'done'
+          icon: 'done',
+          timeout: 5000
         })
       } catch (error: any) {
         if (error?.response) {
           loading.value = false
-          console.log('err1')
-
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || 'Registration Failed',
+                            error?.response?.data?.error?.message ||
+                            'Registration Failed',
             color: 'negative'
           })
         } else if (error?.request) {
-          console.log('err2')
-
           loading.value = false
           cb?.onError && cb?.onError()
           errorMessage.value =
@@ -128,8 +124,6 @@ export class AuthApi {
             color: 'negative'
           })
         } else {
-          console.log('err3')
-
           loading.value = false
           cb?.onError && cb?.onError()
           errorMessage.value = error.message
@@ -164,20 +158,21 @@ export class AuthApi {
         loading.value = false
         cb?.onSuccess && cb?.onSuccess()
         Notify.create({
-          message: 'Password reset email sent! Check your mail inbox',
+          message:
+                        'Password reset email sent! Please Check your mail inbox',
           color: 'positive',
-          icon: 'done'
+          icon: 'done',
+          timeout: 5000
         })
       } catch (error: any) {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || 'Passwrod Reset Failed',
+                            error?.response?.data?.error?.message ||
+                            'Passwrod Reset Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -234,12 +229,11 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || 'Passwrod Reset Failed',
+                            error?.response?.data?.error?.message ||
+                            'Passwrod Reset Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -296,12 +290,11 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || 'Passwrod change Failed',
+                            error?.response?.data?.error?.message ||
+                            'Passwrod change Failed',
             color: 'negative'
           })
         } else if (error?.request) {
@@ -355,12 +348,11 @@ export class AuthApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value =
-                    error?.response?.data?.error?.details?.errors[0]?.message
+        errorMessage.value = error?.response?.data?.error?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.details?.errors[0]
-                          ?.message || `Failed to confirm ${this.name}`,
+                        error?.response?.data?.error?.message ||
+                        `Failed to confirm ${this.name}`,
           color: 'negative'
         })
       } else if (error?.request) {
@@ -404,12 +396,10 @@ export class AuthApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message ||
+                            error?.response?.data?.error?.message ||
                             'Failed to send email confirmation',
             color: 'negative'
           })
@@ -458,12 +448,10 @@ export class AuthApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value =
-                    error?.response?.data?.error?.details?.errors[0]?.message
+        errorMessage.value = error?.response?.data?.error?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.details?.errors[0]
-                          ?.message ||
+                        error?.response?.data?.error?.message ||
                         'Users not logged in or Session expired',
           color: 'negative'
         })

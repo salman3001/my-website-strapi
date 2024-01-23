@@ -14,13 +14,18 @@ export const authRoutes: RouteRecordRaw[] = [
     meta: { noAuthOnly: true }
   },
   {
-    path: '/auth/forgot-passwrod',
+    path: '/auth/email-confirmed',
+    component: () => import('pages/auth/EmailConfirmed.vue'),
+    name: 'email-confirmed'
+  },
+  {
+    path: '/auth/forgot-password',
     component: () => import('pages/auth/ForgotPassword.vue'),
     name: 'forgot-password',
     meta: { noAuthOnly: true }
   },
   {
-    path: '/auth/rest-passwrod',
+    path: '/auth/reset-password',
     component: () => import('pages/auth/ResetPassword.vue'),
     name: 'reset-password',
     meta: { noAuthOnly: true }

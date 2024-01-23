@@ -6,6 +6,8 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+const $q = useQuasar()
+
 const isPwd = ref(true)
 
 const form = ref({
@@ -18,6 +20,13 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
   {},
   {
     onSuccess() {
+      $q.notify({
+        color: 'green',
+        message:
+                    'Registration Successfull. Please check your email and verify your account',
+        timeout: 5000
+      })
+
       router.push({ name: 'login' })
     }
   }
@@ -44,10 +53,10 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                                 <BrandLogo />
                             </div>
                             <div class="text-h5 text-weight-bold text-center">
-                                Welcome Back!
+                                Signup
                             </div>
                             <div class="text-body2 text-grey-8 text-center">
-                                Please enter your crendtials to login
+                                Please enter your details to get registered
                             </div>
                         </q-card-section>
                         <q-card-section v-if="errorMessage">
@@ -56,7 +65,7 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                             </div>
                         </q-card-section>
                         <q-card-section class="q-pt-none">
-                            <form
+                            <q-form
                                 class="q-gutter-y-md"
                                 @submit.prevent="
                                     register({
@@ -70,6 +79,15 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                                         outlined
                                         v-model="form.username"
                                         dense
+                                        :rules="[
+                                            $rules.required(
+                                                'Field in required'
+                                            ),
+                                            $rules.minLength(
+                                                3,
+                                                'Must contain 03 charectors'
+                                            )
+                                        ]"
                                     />
                                 </div>
                                 <div>
@@ -79,6 +97,12 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                                         type="email"
                                         v-model="form.email"
                                         dense
+                                        :rules="[
+                                            $rules.required(
+                                                'Field in required'
+                                            ),
+                                            $rules.email('Email not valid')
+                                        ]"
                                     />
                                 </div>
                                 <div>
@@ -88,6 +112,15 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                                         v-model="form.password"
                                         outlined
                                         :type="isPwd ? 'password' : 'text'"
+                                        :rules="[
+                                            $rules.required(
+                                                'Field in required'
+                                            ),
+                                            $rules.minLength(
+                                                8,
+                                                ' Must contain 08 charectors'
+                                            )
+                                        ]"
                                     >
                                         <template v-slot:append>
                                             <q-icon
@@ -118,7 +151,7 @@ const { register, errorMessage, loading } = AuthApi.useRegister(
                                     :loading="loading"
                                     >Submit</q-btn
                                 >
-                            </form>
+                            </q-form>
                         </q-card-section>
                     </q-card>
                 </div>

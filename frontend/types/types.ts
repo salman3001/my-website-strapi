@@ -75,9 +75,9 @@ export interface StrapiQueryBuilder {
     populate?: '*' | string[] | Record<any, StrapiQueryBuilder>
     fields?: string[]
     pagination?: {
-        pageSize: number
-        page: number
-        withCount: boolean
+        pageSize?: number
+        page?: number
+        withCount?: boolean
     }
     publicationState?: 'live' | 'preview'
     locale?: string[]

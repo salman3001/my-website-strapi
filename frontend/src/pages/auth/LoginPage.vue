@@ -22,7 +22,7 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
       $q.cookies.set('user', response.value?.user as unknown as string)
       $q.cookies.set('token', response.value?.jwt as unknown as string)
       router.push({
-        name: 'dashboard'
+        name: 'home'
       })
     }
   }
@@ -61,7 +61,7 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                             </div>
                         </q-card-section>
                         <q-card-section class="q-pt-none">
-                            <form
+                            <q-form
                                 class="q-gutter-y-md"
                                 @submit.prevent="
                                     login({
@@ -76,6 +76,9 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                                         outlined
                                         v-model="form.identifier"
                                         dense
+                                        :rules="[
+                                            $rules.required('Field in required')
+                                        ]"
                                     />
                                 </div>
                                 <div>
@@ -85,6 +88,9 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                                         v-model="form.password"
                                         outlined
                                         :type="isPwd ? 'password' : 'text'"
+                                        :rules="[
+                                            $rules.required('Field in required')
+                                        ]"
                                     >
                                         <template v-slot:append>
                                             <q-icon
@@ -118,7 +124,7 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                                     :loading="loading"
                                     >Submit</q-btn
                                 >
-                            </form>
+                            </q-form>
                         </q-card-section>
                     </q-card>
                 </div>

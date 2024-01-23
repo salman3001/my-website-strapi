@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import { useQuasar } from 'quasar'
 import { AuthApi } from 'src/utils/api/authApi'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
-
-const $q = useQuasar()
-
+const route = useRoute()
 const isPwd = ref(true)
 
 const form = ref({
-  identifier: '',
-  password: ''
+  password: '',
+  passwordConfirmation: '',
+  code: (route.query.code as string) || ''
 })
 
-const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
+const { execute, errorMessage, loading } = AuthApi.useResetPassword(
   {},
   {
     onSuccess() {
-      $q.cookies.set('user', response.value?.user as unknown as string)
-      $q.cookies.set('token', response.value?.jwt as unknown as string)
       router.push({
-        name: 'dashboard'
+        name: 'login'
       })
     }
   }
@@ -49,10 +45,10 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                                 <BrandLogo />
                             </div>
                             <div class="text-h5 text-weight-bold text-center">
-                                Welcome Back!
+                                Reset Your Password!
                             </div>
                             <div class="text-body2 text-grey-8 text-center">
-                                Please enter your crendtials to login
+                                Please choose a new password
                             </div>
                         </q-card-section>
                         <q-card-section v-if="errorMessage">
@@ -63,26 +59,34 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                         <q-card-section class="q-pt-none">
                             <form
                                 class="q-gutter-y-md"
-                                @submit.prevent="
-                                    login({
-                                        identifier: form.identifier,
-                                        password: form.password
-                                    })
-                                "
+                                @submit.prevent="execute(form)"
                             >
                                 <div>
-                                    <label>Email Or Username</label>
-                                    <q-input
-                                        outlined
-                                        v-model="form.identifier"
-                                        dense
-                                    />
-                                </div>
-                                <div>
-                                    <label>Password</label>
+                                    <label>New Password</label>
                                     <q-input
                                         dense
                                         v-model="form.password"
+                                        outlined
+                                        :type="isPwd ? 'password' : 'text'"
+                                    >
+                                        <template v-slot:append>
+                                            <q-icon
+                                                :name="
+                                                    isPwd
+                                                        ? 'visibility_off'
+                                                        : 'visibility'
+                                                "
+                                                class="cursor-pointer"
+                                                @click="isPwd = !isPwd"
+                                            />
+                                        </template>
+                                    </q-input>
+                                </div>
+                                <div>
+                                    <label>Cofirm Password</label>
+                                    <q-input
+                                        dense
+                                        v-model="form.passwordConfirmation"
                                         outlined
                                         :type="isPwd ? 'password' : 'text'"
                                     >

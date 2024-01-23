@@ -38,12 +38,11 @@ export class BaseApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value =
-                    error?.response?.data?.error?.details?.errors[0]?.message
+        errorMessage.value = error?.response?.data?.error?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.details?.errors[0]
-                          ?.message || `Failed to fetch ${this.name}`,
+                        error?.response?.data?.error?.message ||
+                        `Failed to fetch ${this.name}`,
           color: 'negative'
         })
       } else if (error?.request) {
@@ -84,12 +83,11 @@ export class BaseApi {
     } catch (error: any) {
       loading.value = false
       if (error?.response) {
-        errorMessage.value =
-                    error?.response?.data?.error?.details?.errors[0]?.message
+        errorMessage.value = error?.response?.data?.error?.message
         Notify.create({
           message:
-                        error?.response?.data?.error?.details?.errors[0]
-                          ?.message || `Failed to fetch ${this.name}`,
+                        error?.response?.data?.error?.message ||
+                        `Failed to fetch ${this.name}`,
           color: 'negative'
         })
       } else if (error?.request) {
@@ -128,12 +126,11 @@ export class BaseApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || `Failed to create ${this.name}`,
+                            error?.response?.data?.error?.message ||
+                            `Failed to create ${this.name}`,
             color: 'negative'
           })
         } else if (error?.request) {
@@ -181,12 +178,11 @@ export class BaseApi {
         if (error?.response) {
           loading.value = false
           cb?.onError && cb?.onError()
-          errorMessage.value =
-                        error?.response?.data?.error?.details?.errors[0]?.message
+          errorMessage.value = error?.response?.data?.error?.message
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || `Failed to updtae ${this.name}`,
+                            error?.response?.data?.error?.message ||
+                            `Failed to updtae ${this.name}`,
             color: 'negative'
           })
         } else if (error?.request) {
@@ -235,8 +231,8 @@ export class BaseApi {
           loading.value = false
           Notify.create({
             message:
-                            error?.response?.data?.error?.details?.errors[0]
-                              ?.message || `Failed to delete ${this.name}`,
+                            error?.response?.data?.error?.message ||
+                            `Failed to delete ${this.name}`,
             color: 'negative'
           })
         } else if (error?.request) {
