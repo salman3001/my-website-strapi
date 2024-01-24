@@ -23,6 +23,12 @@ const routes: RouteRecordRaw[] = [
         name: 'portfolio.projects.index'
       },
       {
+        path: '/portfolio/projects/tags/:slug',
+        component: () =>
+          import('pages/portfolio/projects/tags/TagIndex.vue'),
+        name: 'portfolio.projects.tags.index'
+      },
+      {
         path: '/portfolio/projects/:slug/',
         component: () =>
           import('pages/portfolio/projects/ProjectShow.vue'),

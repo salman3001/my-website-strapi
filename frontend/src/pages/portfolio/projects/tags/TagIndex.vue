@@ -2,32 +2,15 @@
 import { ApiPortfolioProjectPortfolioProject } from 'app/types/contentTypes'
 import ProjectCard from 'src/components/ProjectCard.vue'
 import { ref } from 'vue'
-import PortfolioPorjectsApi from 'src/utils/api/PortfolioProjectsApi'
+import ProjectTagApi from 'src/utils/api/ProjectTagApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useMetadata } from 'src/composables/useMetadata'
 
 const route = useRoute()
 const router = useRouter()
 
-useMetadata({
-  metaTitle: 'My All Projects',
-  keywords: 'Projects',
-  metaDescription: 'Here is desc',
-  metaImage: {
-    data: {
-      attributes: {
-        formats: {
-          thumbnail: {
-            url: '/images/sample dp.webp'
-          }
-        }
-      }
-    }
-  }
-})
-
 const page = ref(route.query.page ? Number(route.query.page) : 1)
-const projects = ref<null | {
+const tag = ref<null | {
     data: {
         id: number
         attributes: ApiPortfolioProjectPortfolioProject['attributes']
@@ -36,17 +19,29 @@ const projects = ref<null | {
 }>(null)
 
 const fetchProjects = () => {
-  PortfolioPorjectsApi.find({
+  ProjectTagApi.find({
     populate: {
-      thumbnail: {
-        fields: ['alternativeText', 'formats']
+      portfolio_projects: {
+        populate: {
+          thumbnail: {
+            fields: ['alternativeText', 'formats']
+          }
+        },
+        pagination: {
+          page: page.value || 1,
+          pageSize: 25,
+          withCount: true
+        }
       }
     },
-    pagination: {
-      page: page.value
+    filters: {
+      slug: {
+        $eq: route.params.slug as string
+      }
     }
   }).then(({ data }) => {
-    projects.value = data.value
+    tag.value = data.value
+    useMetadata(data.value?.data[0]?.attributes?.seo)
   })
 }
 
@@ -63,13 +58,19 @@ const updatePage = (v: number) => {
 </script>
 <template>
     <div class="q-pa-md q-pa-md-xl q-pa-lg-2xl q-col-gutter-lg">
-        <h1 class="text-h4">All Projects</h1>
+        <h1 class="text-h4">
+            All
+            <span class="tw-capitalize">
+                {{ tag?.data[0]?.attributes?.name }}
+            </span>
+            Projects
+        </h1>
         <div
             class="tw-grid 2xl:tw-grid-cols-4 lg:tw-grid-cols-3 md:tw-grid-cols-2 q-gutter-md"
-            v-if="projects"
+            v-if="tag"
         >
             <ProjectCard
-                v-for="p in projects.data"
+                v-for="p in tag?.data[0]?.attributes?.portfolio_projects?.data"
                 :key="p?.id"
                 :img_url="
                     p?.attributes?.thumbnail?.data?.attributes?.formats?.medium
@@ -80,11 +81,14 @@ const updatePage = (v: number) => {
                 :slug="p?.attributes?.slug"
             />
         </div>
-        <div v-if="projects" class="row">
+        <div v-if="tag" class="row">
             <q-space />
             <q-pagination
                 v-model="page"
-                :max="projects.meta?.pagination?.pageCount"
+                :max="
+                    tag?.data[0]?.attributes?.portfolio_projects?.meta
+                        ?.pagination?.pageCount
+                "
                 direction-links
                 flat
                 color="grey"

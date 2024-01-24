@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ApiPortfolioHomePortfolioHome } from 'app/types/contentTypes'
+import { useMeta } from 'quasar'
 import SkillProgress from 'src/components/SkillProgress.vue'
 import ContactMeForm from 'src/components/forms/ContactMeForm.vue'
+import { useMetadata } from 'src/composables/useMetadata'
 import PortfolioPageApi from 'src/utils/api/PortfolioPageApi'
 import { ref, watch, toRaw } from 'vue'
 
@@ -32,14 +34,19 @@ PortfolioPageApi.find({
     cards: { fields: ['*'] },
     experiences: { fields: ['*'] },
     educations: { fields: ['*'] },
-    avatar: { fields: ['*'] }
+    avatar: { fields: ['*'] },
+    seo: {
+      fields: ['*'],
+      populate: {
+        metaSocial: { fields: ['*'] },
+        metaImage: { fields: ['formats'] }
+      }
+    }
   }
 }).then(({ data }) => {
-  pageData.value = data.value
-})
+  pageData.value = data.value as any
 
-watch(pageData, () => {
-  console.log(toRaw(pageData.value))
+  useMetadata(data.value?.data?.attributes?.seo)
 })
 </script>
 

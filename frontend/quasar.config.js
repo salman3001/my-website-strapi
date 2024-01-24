@@ -69,9 +69,9 @@ module.exports = configure(function (ctx) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {
-      //   API: ctx.dev ? 'http://localhost:1337' : 'something/'
-      // },
+      env: {
+        BASE_URL: ctx.dev ? 'http://localhost:1337' : 'something'
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -131,7 +131,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Cookies', 'Notify', 'Dark', 'LocalStorage']
+      plugins: ['Cookies', 'Notify', 'Dark', 'LocalStorage', 'Meta']
     },
 
     // animations: 'all', // --- includes all animations

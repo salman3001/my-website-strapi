@@ -71,7 +71,9 @@ type FilterBuilder = {
 
 export interface StrapiQueryBuilder {
     sort?: string[]
-    filters?: FilterBuilder | Record<any, FilterBuilder>
+    filters?:
+        | FilterBuilder
+        | Record<any, FilterBuilder | Record<any, FilterBuilder>>
     populate?: '*' | string[] | Record<any, StrapiQueryBuilder>
     fields?: string[]
     pagination?: {

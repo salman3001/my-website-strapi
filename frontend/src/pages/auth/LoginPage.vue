@@ -52,7 +52,7 @@ const { login, response, errorMessage, loading } = AuthApi.useLocalLogin(
                                 Welcome Back!
                             </div>
                             <div class="text-body2 text-grey-8 text-center">
-                                Please enter your crendtials to login
+                                Please enter your credentials to login
                             </div>
                         </q-card-section>
                         <q-card-section v-if="errorMessage">

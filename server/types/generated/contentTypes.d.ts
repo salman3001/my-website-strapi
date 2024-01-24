@@ -936,6 +936,7 @@ export interface ApiPortfolioHomePortfolioHome extends Schema.SingleType {
     skills_subtitle: Attribute.Text;
     contact_me_subtitle: Attribute.Text;
     cards: Attribute.Component<'portfolio.cards', true>;
+    seo: Attribute.Component<'shared.seo'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -960,6 +961,7 @@ export interface ApiPortfolioProjectPortfolioProject
     singularName: 'portfolio-project';
     pluralName: 'portfolio-projects';
     displayName: 'Portfolio Project';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -977,6 +979,12 @@ export interface ApiPortfolioProjectPortfolioProject
           preset: 'toolbarBaloon';
         }
       >;
+    seo: Attribute.Component<'shared.seo'>;
+    project_tags: Attribute.Relation<
+      'api::portfolio-project.portfolio-project',
+      'manyToMany',
+      'api::project-tag.project-tag'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1026,6 +1034,44 @@ export interface ApiProfileProfile extends Schema.CollectionType {
   };
 }
 
+export interface ApiProjectTagProjectTag extends Schema.CollectionType {
+  collectionName: 'project_tags';
+  info: {
+    singularName: 'project-tag';
+    pluralName: 'project-tags';
+    displayName: 'Project Tag';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    seo: Attribute.Component<'shared.seo'>;
+    portfolio_projects: Attribute.Relation<
+      'api::project-tag.project-tag',
+      'manyToMany',
+      'api::portfolio-project.portfolio-project'
+    >;
+    slug: Attribute.UID<'api::project-tag.project-tag', 'name'> &
+      Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::project-tag.project-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::project-tag.project-tag',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiSubscriberSubscriber extends Schema.CollectionType {
   collectionName: 'subscribers';
   info: {
@@ -1060,7 +1106,8 @@ export interface ApiTagTag extends Schema.CollectionType {
   info: {
     singularName: 'tag';
     pluralName: 'tags';
-    displayName: 'Tag';
+    displayName: 'Blog Tag';
+    description: '';
   };
   options: {
     draftAndPublish: false;
@@ -1076,6 +1123,7 @@ export interface ApiTagTag extends Schema.CollectionType {
     desc: Attribute.Text;
     seo: Attribute.Component<'shared.seo'>;
     blogs: Attribute.Relation<'api::tag.tag', 'manyToMany', 'api::blog.blog'>;
+    slug: Attribute.UID<'api::tag.tag', 'name'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
@@ -1110,6 +1158,7 @@ declare module '@strapi/types' {
       'api::portfolio-home.portfolio-home': ApiPortfolioHomePortfolioHome;
       'api::portfolio-project.portfolio-project': ApiPortfolioProjectPortfolioProject;
       'api::profile.profile': ApiProfileProfile;
+      'api::project-tag.project-tag': ApiProjectTagProjectTag;
       'api::subscriber.subscriber': ApiSubscriberSubscriber;
       'api::tag.tag': ApiTagTag;
     }

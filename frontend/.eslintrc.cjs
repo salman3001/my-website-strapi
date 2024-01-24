@@ -65,6 +65,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     camelcase: 'off',
+    'escript-eslint/no-explicit-any': 'off',
     'space-before-function-paren': 'off',
 
     // allow async-await

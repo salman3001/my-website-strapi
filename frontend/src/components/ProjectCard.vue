@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
     <q-card class="my-card" flat bordered>
-        <q-img :src="img_url" />
+        <q-img :src="img_url" class="tw-max-h-72" />
 
         <q-card-section>
             <div class="text-overline text-orange-9">Overline</div>
